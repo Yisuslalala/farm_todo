@@ -1,10 +1,3 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from model import Todo
-
-# App object
-app = FastAPI()
-
 from database import (
     fetch_one_todo,
     fetch_all_todos,
@@ -12,7 +5,15 @@ from database import (
     update_todo,
     remove_todo
 )
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from model import Todo
 
+# App object
+app = FastAPI()
+
+
+# origin of React App
 origins = ["https://localhost:3000"]
 
 app.add_middleware(
@@ -49,7 +50,8 @@ async def post_todo(todo: Todo):
     response = await create_todo(todo.dict())
     if response:
         return response
-    raise HTTPException(400, "Something went wrong") # 400 is for a bad request
+    # 400 is for a bad request
+    raise HTTPException(400, "Something went wrong")
 
 
 @app.put("/api/todo/{title}", response_model=Todo)
